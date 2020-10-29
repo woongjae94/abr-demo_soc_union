@@ -3,9 +3,21 @@ import argparse
 import threading
 import time
 import copy
+import requests
+
+# control
+import phue_lamp
+import control_web
 
 client_list = {}
 client_name = ['Gesture', 'Action', 'Headpose']
+# Gesture list [ Swiping Up / Sliding Two Fingers Up / Swiping Left / Thumb Up / Sliding Two Fingers Right / Stop Sign
+#                Sliding Two Fingers Left / Sliding Two Fingers Down / Rolling Hand Backward / Doing other things
+#                Swiping Right / Swiping Down / Thumb Down ]
+# Action list [ sitting / standing / drinking / brushing / playing instrument / speaking
+#               waving a hand / working / coming / leaving / talking on the phone
+#               stretching / nodding off / reading / blow nose ]
+# Head pose list { ~left : lamp , center : pc , right~ : ai speaker }
 union_data_dict = {x:'None' for x in client_name}
 
 t_lock = threading.Lock()
@@ -65,21 +77,28 @@ if __name__ == '__main__':
     print("#### All clients are connected")
 
     # connect phue
-    phue_lamp = Bridge(Hue_ip)
-    while True:
-        try:
-            phue_lamp.connect()
-            device['lamp'] = phue_lamp
-            break
-        except:
-            print("retry - press the bridge link button")
-            continue
-    print("Hue lamp connected -- now state : ", phue_lamp.get_light(1, 'on'))
-    bool_lamp_state = phue_lamp.get_light(1, 'on')
+    device_lamp = phue_lamp.Phue(Hue_ip)
+
+    #
+    #device_pc = control_web.Web_control()
+
+    mills = lambda: int(round(time.time() * 1000))
+    prev_time = mills()
 
     while True:
         t_lock.acquire()
         temp_dict = copy.deepcopy(union_data_dict)
         t_lock.release()
+
+        now_time = mills()
+
+        if (now_time - prev_time) > 500:
+            requests.get('http://192.168.0.21:3001/api/v1/actions/action/{}/{}_{}_{}_{}_{}' \
+                .format('home', 'Mode: None', temp_dict['Gesture'], temp_dict['Action'], temp_dict['Headpose'] + 'Device_name', 'controlA'))
+
+        
+
+
+        
         
 
