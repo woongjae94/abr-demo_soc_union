@@ -7,7 +7,7 @@ import requests
 
 # control
 import phue_lamp
-#import control_web
+import control_web
 
 client_list = {}
 client_name = ['Gesture', 'Action', 'Headpose']
@@ -89,10 +89,10 @@ if __name__ == '__main__':
     print(device_lamp.get_light_state())
 
     #
-    #device_pc = control_web.Web_control()
+    device_pc = control_web.Web()
 
     #
-    #device_ppt = control_web.Ppt_control()
+    device_ppt = control_web.Ppt()
 
 
     reset_time = 0
@@ -110,6 +110,7 @@ if __name__ == '__main__':
         now_time = mills()
 
         if (now_time - prev_time) > 500:
+            #print(temp_dict)
             gesture_msg = temp_dict['Gesture'].split("$")[-2]
             action_msg = temp_dict['Action'].split("$")[-2]
             head_msg = temp_dict['Headpose'].split("$")[-2]
@@ -144,14 +145,17 @@ if __name__ == '__main__':
                     continue
 
                 if device == 'lamp':
+                    device_lamp = phue_lamp.Phue(Hue_ip)
                     device_lamp.control_lamp(pre_gesture, gesture_msg)
 
                 elif device == 'pc':
-                    #device_pc.control_pc(pre_gesture, gesture_msg)
+                    device_pc = control_web.Web()
+                    device_pc.control_pc(pre_gesture, gesture_msg, head_msg)
                     print("pc")
 
                 elif device == 'ppt':
-                    #device_ppt.control_ppt(pre_gesture, gesture_msg)
+                    device_ppt = control_web.Ppt()
+                    device_ppt.control_ppt(pre_gesture, gesture_msg)
                     print("ppt")
 
                 else:

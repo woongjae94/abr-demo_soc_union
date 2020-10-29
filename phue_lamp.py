@@ -79,22 +79,22 @@ class Phue:
 
         else:
             if now_gesture == 'Sliding Two Fingers Up':
-                #power on
-                self.power_switch(True)
+                #
+                pass
 
             elif now_gesture == 'Stop Sign':
-                #power off
+                # power off
                 self.power_switch(False)
 
             elif now_gesture == 'Swiping Right':
-                #color change
+                # color change
                 self.change_color_rgb(color_list[self.color_num])
                 self.color_num += 1
                 if self.color_num > 6:
                     self.color_num = 0
 
             elif now_gesture == 'Swiping Left':
-                #color change
+                # color change
                 self.change_color_rgb(color_list[self.color_num])
                 self.color_num += -1
                 if self.color_num <0:
@@ -102,16 +102,16 @@ class Phue:
 
             elif now_gesture == 'Sliding Two Fingers Right':
                 # bri up
-                self.bri_value += 30
+                self.bri_value += 80
                 if self.bri_value > 253:
                     self.bri_value = 254
                 self.change_bri()
             
             elif now_gesture == 'Sliding Two Fingers Left':
                 # bri down
-                self.bri_value += -30
+                self.bri_value += -80
                 if self.bri_value < 20:
-                    self.bri_value = 30
+                    self.bri_value = 10
                 self.change_bri()
 
             elif now_gesture == 'Sliding Two Fingers Down':
@@ -124,11 +124,8 @@ class Phue:
                 #
                 pass
             elif now_gesture == 'Rolling Hand Backward':
-                #
-                pass
-            elif now_gesture == 'Thumb Down':
-                #
-                pass
+                # power on
+                self.power_switch(True)
             else:
                 #
                 pass
