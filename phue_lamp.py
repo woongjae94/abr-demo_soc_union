@@ -37,6 +37,8 @@ color_list = [ [1,0,0],  #red
                [1,0,1],  #purple
                [1,1,1] ] #white
 
+reading_light = [ 1, 1, 0.94 ]
+
 class Phue:
     def __init__(self, Hue_ip):
         # connect phue
@@ -81,6 +83,10 @@ class Phue:
             if now_gesture == 'Sliding Two Fingers Up':
                 #
                 pass
+
+            elif now_gesture == 'Thumb Up':
+                # power on
+                self.power_switch(True)
 
             elif now_gesture == 'Stop Sign':
                 # power off

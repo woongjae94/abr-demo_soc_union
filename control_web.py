@@ -1,18 +1,21 @@
 import pyautogui as pg
-from selenium import webdriver
+#from selenium import webdriver
 
 
 class Web():
     def __init__(self):
-        self.options = webdriver.ChromeOptions()
-        self.options.add_argument('--no-sandbox')
-        self.options.add_argument("lang=ko_KR")
-        self.options.add_argument("disable-gpu")
-        self.options.add_experimental_option('excludeSwitches', ['enable-automation'])
-        self.browser = None
+        #self.options = webdriver.ChromeOptions()
+        #self.options.add_argument('--no-sandbox')
+        #self.options.add_argument("lang=ko_KR")
+        #self.options.add_argument("disable-gpu")
+        #self.options.add_experimental_option('excludeSwitches', ['enable-automation'])
+        #self.browser = None
         self.screenW, self.screenH = pg.size()
-        self.tabs = None
-        self.my_tab_num = -1
+        #self.tabs = None
+        #self.my_tab_num = -1
+
+    #def __del__(self):
+
 
 
     def control_pc(self, pre_gesture, now_gesture, head):
@@ -22,17 +25,20 @@ class Web():
         else:
             if now_gesture == 'Thumb Up':
                 # browser open
-                if self.my_tab_num == -1:
-                    self.browser = webdriver.Chrome(chrome_options=self.options, executable_path = './chromedriver')
-                    self.browser.set_window_position(self.screenW//2, 0)
-                    self.browser.set_window_size(self.screenW//2, self.screenH)
-                    self.browser.get('http://google.com')
-                    self.tabs = self.browser.window_handles
-                    self.my_tab_num += 1
-                else:
-                    self.browser.execute_script('window.open("http://google.com", "_blank");')
-                    self.tabs = self.browser.window_handles
-                    self.my_tab_num =len(self.browser.window_handles) + 1
+                # if self.my_tab_num == -1:
+                #     self.browser = webdriver.Chrome(chrome_options=self.options, executable_path = './chromedriver')
+                #     self.browser.set_window_position(self.screenW//2, 0)
+                #     self.browser.set_window_size(self.screenW//2, self.screenH)
+                #     self.browser.get('http://google.com')
+                #     self.tabs = self.browser.window_handles
+                #     self.my_tab_num += 1
+                # else:
+                #     self.browser.execute_script('window.open("http://google.com", "_blank");')
+                #     self.tabs = self.browser.window_handles
+                #     self.my_tab_num =len(self.browser.window_handles) + 1
+                # click
+                pg.click()
+                pass
 
             elif now_gesture == 'Sliding Two Fingers Up':
                 # mouse up
@@ -43,23 +49,26 @@ class Web():
 
             elif now_gesture == 'Stop Sign':
                 # exit
-                self.tabs = self.browser.window_handles
-                for i in range(self.my_tab_num, -1, -1):
-                    self.browser.switch_to_window(self.tabs[i])
-                    self.browser.close()
-                self.browser = None
-                self.tabs = None
-                self.my_tab_num = 0
+                # self.tabs = self.browser.window_handles
+                # for i in range(self.my_tab_num, -1, -1):
+                #     self.browser.switch_to_window(self.tabs[i])
+                #     self.browser.close()
+                # self.browser = None
+                # self.tabs = None
+                # self.my_tab_num = 0
+                pass
 
             elif now_gesture == 'Swiping Right':
                 # open google news
-                self.browser.switch_to_window(self.tabs[self.my_tab_num])
-                self.browser.get('http://news.google.co.kr')
+                # self.browser.switch_to_window(self.tabs[self.my_tab_num])
+                # self.browser.get('http://news.google.co.kr')
+                pass
 
             elif now_gesture == 'Swiping Left':
                 # open naver
-                self.browser.switch_to_window(self.tabs[self.my_tab_num])
-                self.browser.get('http://naver.com')
+                # self.browser.switch_to_window(self.tabs[self.my_tab_num])
+                # self.browser.get('http://naver.com')
+                pass
 
             elif now_gesture == 'Sliding Two Fingers Right':
                 # mouse right
@@ -84,19 +93,23 @@ class Web():
 
             elif now_gesture == 'Swiping Up':
                 # close tab
-                self.browser.switch_to_window(self.tabs[self.my_tab_num])
-                self.browser.close()
-                self.my_tab_num += -1
-                if self.my_tab_num<0:
-                    self.my_tab_num = 0
+                # self.browser.switch_to_window(self.tabs[self.my_tab_num])
+                # self.browser.close()
+                # self.my_tab_num += -1
+                # if self.my_tab_num<0:
+                #     self.my_tab_num = 0
+                # scroll Down
+                pg.scroll(-10)
 
             elif now_gesture == 'Swiping Down':
-                # click
-                pg.click()
+                # scroll Up
+                pg.scroll(10)
 
             elif now_gesture == 'Rolling Hand Backward':
                 # go back
-                self.browser.back()
+                #self.browser.back()
+                
+                pass
 
             else:
                 #
