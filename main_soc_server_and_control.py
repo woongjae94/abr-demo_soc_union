@@ -6,6 +6,8 @@ import time
 import copy
 import requests
 
+#sshpass -p "dpdlqldkf" scp -o StrictHostKeyChecking=no -P 8222 /home/soc_test_client.py abr@155.230.14.96:~/Desktop/
+
 # control
 import phue_lamp
 import control_web
@@ -25,6 +27,15 @@ union_data_dict = {x:'None$None$None$' for x in client_name}
 
 t_lock = threading.Lock()
 #t_lock = multiprocessing.Lock()
+
+today = time.strftime('%Y-%m-%d', time.localtime(time.time()))
+time_now = lambda: time.strftime('%H:%M:%S', time.localtime(time.time()))
+mills = lambda: int(round(time.time() * 1000))
+tester_name = ""
+
+def add_log(source, msg):
+    with open('./' + today + "_" + tester_name + ".txt", "a") as f:
+        f.write(today+'\t'+time_now()+'\t'+source+'\t'+msg+'\n')
 
 def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -87,6 +98,8 @@ if __name__ == '__main__':
     #control_mode = [ Action Gesture ]
     control_param = 'None'
 
+    tester_name = input("please enter tester's name(ENG) : ")
+
     # wait connect request from client
     print("#### server socket start...")
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -115,7 +128,6 @@ if __name__ == '__main__':
 
     reset_time = 0
 
-    mills = lambda: int(round(time.time() * 1000))
     prev_time = mills()
 
     pre_gesture = 'None'
@@ -250,6 +262,8 @@ if __name__ == '__main__':
                 device = 'None'
             
             pre_gesture = gesture_msg
+            pre_action = action_msg
+            pre_head = head_msg
 
             reset_time += 1
             if reset_time > 5:
