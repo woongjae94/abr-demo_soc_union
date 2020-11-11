@@ -5,6 +5,7 @@ import threading
 import time
 import copy
 import requests
+import subprocess
 from pytz import timezone
 from datetime import datetime
 
@@ -60,6 +61,7 @@ def receive_handler(client_socket, addr, client):
             t_lock.acquire()
             union_data_dict[client] = data
             t_lock.release()
+            #time.sleep(0.1)
     except:
         print("client socket [" + client + "] is forcibly terminated")
         t_lock.acquire()
@@ -105,7 +107,6 @@ if __name__ == '__main__':
     #device = [None lamp pc ppt]
     control_mode = 'Action'
     #control_mode = [ Action Gesture ]
-    
 
     # wait connect request from client
     print("#### server socket start...")
@@ -120,28 +121,34 @@ if __name__ == '__main__':
     print("#### All clients are connected")
 
     # connect phue
-    wait_for_phue_connect=input("press phue link button and then press enter : ")
-    device_lamp = phue_lamp.Phue(Hue_ip)
-    print(device_lamp.get_light_state())
-    if device_lamp.get_light_state():
-        device_lamp.power_switch(False)
+    #wait_for_phue_connect=input("press phue link button and then press enter : ")
+    #device_lamp = phue_lamp.Phue(Hue_ip)
+    #print(device_lamp.get_light_state())
+    #if device_lamp.get_light_state():
+    #    device_lamp.power_switch(False)
 
     #
     device_pc = control_web.Web()
+
     #
     device_ppt = control_web.Ppt()
 
     while True:
-        pre_gesture = "None"
-        pre_action = "None"
-        pre_head = "None"
         reset_time = 0
         prev_time = mills()
         pre_gesture = 'None'
         if_pre_reading = False
+        control_mode = 'Action'
+        pre_gesture = "None"
+        pre_action = "None"
+        pre_head = "None"
         try:
             tester_name = input("please enter tester's name(ENG) : ")
             while True:
+                # if len(client_list) < num_of_client:
+                #     print("trying to reconnect client socket")
+                #     accept_func(server_socket, server_ip, port, num_of_client)
+
                 t_lock.acquire()
                 temp_dict = copy.deepcopy(union_data_dict)
                 t_lock.release()
@@ -198,80 +205,7 @@ if __name__ == '__main__':
         #               waving a hand / working / coming / leaving / talking on the phone
         #               stretching / nodding off / reading / blow nose ]
         # device = [None lamp pc ppt]          
-                    if control_mode == 'Action':
-
-                        if action_msg == 'reading':
-                            # light on
-                            if not device_lamp.get_light_state():
-                                device_lamp.power_switch(True)
-                            device_lamp.bri_value = 254
-                            device_lamp.change_bri()
-                            device_lamp.change_color_rgb([0.9, 0.7, 0.2])
-                            control_mode = 'Gesture'
-                            device = 'lamp'
-                            if_pre_reading = True
-
-                        elif action_msg == 'stretching':
-                            if if_pre_reading:
-                                if device_lamp.get_light_state():
-                                    device_lamp.power_switch(False)
-                                control_mode = 'Action'
-                                device = 'None'
-                                if_pre_reading = False
-                        
-                        else:
-                            #
-                            pass    
-
-
-                        if gesture_msg == 'Thumb Up':
-                            control_mode = 'Gesture'
-                            if head_msg =='FarLeft' or head_msg == 'Left':
-                                device = 'lamp'
-                            elif head_msg == 'Center':
-                                device = 'pc'
-                            elif head_msg == 'FarRight' or head_msg == 'Right':
-                                device = 'pc'
-                            else:
-                                device = 'None'
-                                control_mode = 'Action'
-
-                    elif control_mode == 'Gesture':
-                        
-                        if action_msg == 'stretching':
-                            if if_pre_reading:
-                                if device_lamp.get_light_state():
-                                    device_lamp.power_switch(False)
-                                control_mode = 'Action'
-                                device = 'None'
-                                if_pre_reading = False
-
-
-                        if gesture_msg == 'Thumb Down':
-
-                            control_mode = 'Action'
-                            device = 'None'
-                            continue
-
-                        if device == 'lamp':
-                            device_lamp.control_lamp(pre_gesture, gesture_msg)
-                            print("lamp")
-
-                        elif device == 'pc':
-                            device_pc.control_pc(pre_gesture, gesture_msg, head_msg)
-                            print("pc")
-
-                        elif device == 'ppt':
-                            device_ppt.control_ppt(pre_gesture, gesture_msg)
-                            print("ppt")
-
-                        else:
-                            print("there is no selected device")
-                            control_mode = 'Action'
                     
-                    else:
-                        control_mode = 'Action'
-                        device = 'None'
                     
                     pre_gesture = gesture_msg
                     pre_action = action_msg
@@ -288,7 +222,7 @@ if __name__ == '__main__':
         
         except KeyboardInterrupt:
             print("saving log file...")
-            # auto_save(today, tester_name)
+            auto_save(today, tester_name)
             print("save complete")
             while True:
                 choice = input("q : quit\nr : restart\nq or r :")
