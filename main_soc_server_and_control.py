@@ -140,7 +140,7 @@ if __name__ == '__main__':
         pre_gesture = 'None'
         if_pre_reading = False
         try:
-            tester_name = input("please enter tester's name(ENG) : ")
+            #tester_name = input("please enter tester's name(ENG) : ")
             while True:
                 t_lock.acquire()
                 temp_dict = copy.deepcopy(union_data_dict)

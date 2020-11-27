@@ -59,16 +59,18 @@ class Web():
                 pass
 
             elif now_gesture == 'Swiping Right':
-                # open google news
-                # self.browser.switch_to_window(self.tabs[self.my_tab_num])
-                # self.browser.get('http://news.google.co.kr')
-                pass
-
+                # mouse righr fast
+                cur_x, cur_y = pg.position()
+                pg.moveTo(cur_x + 250, cur_y, 1)
+                if not pg.onScreen(cur_x + 250, cur_y):
+                    pg.moveTo(self.screenW, cur_y)
+                
             elif now_gesture == 'Swiping Left':
-                # open naver
-                # self.browser.switch_to_window(self.tabs[self.my_tab_num])
-                # self.browser.get('http://naver.com')
-                pass
+                # mouse left fast
+                cur_x, cur_y = pg.position()
+                pg.moveTo(cur_x - 250, cur_y, 1)
+                if not pg.onScreen(cur_x - 250, cur_y):
+                    pg.moveTo(0, cur_y)
 
             elif now_gesture == 'Sliding Two Fingers Right':
                 # mouse right
@@ -99,11 +101,11 @@ class Web():
                 # if self.my_tab_num<0:
                 #     self.my_tab_num = 0
                 # scroll Down
-                pg.scroll(-10)
+                pg.scroll(10)
 
             elif now_gesture == 'Swiping Down':
                 # scroll Up
-                pg.scroll(10)
+                pg.scroll(-10)
 
             elif now_gesture == 'Rolling Hand Backward':
                 # go back
@@ -114,8 +116,6 @@ class Web():
             else:
                 #
                 pass
-
-
 
 
 class Ppt():
